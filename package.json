@@ -1,0 +1,25 @@
+{
+	"name": "nodechan",
+	"version": "0.0.1",
+	"description": "Board server for node.js",
+	"author": "sliterok <sh@ohlol.ru>",
+	"bin": {
+		"module-name": "./bin/module-name"
+	},
+	"scripts": {
+		"start": "node init.js"
+	},
+	"main": "lib/foo.js",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/sliterok/NodeChan"
+	},
+	"bugs": {
+		"url": "https://github.com/sliterok/NodeChan/issues"
+	},
+	"keywords": [
+		"NodeChan",
+		"NodeBoard"
+	],
+	"license": "GPL-3.0"
+}
