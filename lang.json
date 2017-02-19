@@ -1,0 +1,37 @@
+{
+	"RU": {
+		"default": {
+			"name": "Аноним"
+		},
+		"form": {
+			"thread": "Создать новый тред",
+			"post": "Запостить",
+			"msg": "Ваше сообщение",
+			"name": "Ваше имя",
+			"sage": "Сажа",
+			"op": "Метка опа",
+			"subject": "Тема треда"
+		},
+		"emptyMessageWithoutFiles": "Вы попытались запостить пустое сообщение без файлов",
+		"boardNotFound": "Доска, на которую вы попытались запостить не найдена",
+		"success": "Успешное действие!"
+	},
+	
+	"EN": {
+		"default": {
+			"name": "Anonymous"
+		},
+		"form": {
+			"thread": "Create new thread",
+			"post": "Post message",
+			"msg": "Your message",
+			"name": "Your name",
+			"sage": "sage",
+			"op": "OP's mark",
+			"subject": "Thread subject"
+		},
+		"emptyMessageWithoutFiles": "You've posted empty message without any files!",
+		"boardNotFound": "Board, that you're posting hasn't been found",
+		"success": "Successful action!"
+	}
+}

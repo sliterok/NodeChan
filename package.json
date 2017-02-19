@@ -1,25 +1,33 @@
 {
-	"name": "nodechan",
-	"version": "0.0.1",
-	"description": "Board server for node.js",
-	"author": "sliterok <sh@ohlol.ru>",
-	"bin": {
-		"module-name": "./bin/module-name"
-	},
-	"scripts": {
-		"start": "node init.js"
-	},
-	"main": "lib/foo.js",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/sliterok/NodeChan"
-	},
-	"bugs": {
-		"url": "https://github.com/sliterok/NodeChan/issues"
-	},
-	"keywords": [
-		"NodeChan",
-		"NodeBoard"
-	],
-	"license": "GPL-3.0"
+  "name": "nodechan",
+  "version": "0.0.1",
+  "description": "Board server for node.js",
+  "author": "sliterok <sh@ohlol.ru>",
+  "bin": {
+    "module-name": "./bin/module-name"
+  },
+  "scripts": {
+    "start": "node init.js"
+  },
+  "main": "lib/foo.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sliterok/NodeChan"
+  },
+  "bugs": {
+    "url": "https://github.com/sliterok/NodeChan/issues"
+  },
+  "keywords": [
+    "NodeChan",
+    "NodeBoard"
+  ],
+  "license": "GPL-3.0",
+  "dependencies": {
+    "body-parser": "^1.16.1",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.14.1",
+    "html-escape": "^2.0.0",
+    "lodash": "^4.17.4",
+    "multiparty": "^4.1.3"
+  }
 }

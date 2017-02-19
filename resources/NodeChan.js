@@ -1,0 +1,1 @@
+console.log(`NodeChan is alive!`);
