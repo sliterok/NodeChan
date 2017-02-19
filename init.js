@@ -67,6 +67,8 @@ class Server{
 						op: (this.boards[board].threads[thread].opHash == req.cookies[`op_of_${sendObj.id}`] && req.body.opMark) || false,
 						id: sendObj.id,
 					}));
+					res.status(302);
+					res.append('Location', `/${board}/${sendObj.id}.html`);
 				}
 				sendObj.code = 0;
 				sendObj.note = lang.success;
