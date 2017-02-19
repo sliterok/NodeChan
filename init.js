@@ -1,10 +1,15 @@
+const language = 'EN',
+	  port = 3000;
+
 let express = require('express'),
 	  bodyParser = require('body-parser'),
 	  multipart = require('multiparty'),
 	  cookieParser = require('cookie-parser'),
 	  _ = require('lodash'),
-	  html = require('./boardhtml.js'),
-	  lang = require('./lang.json').EN
+	  html = require('./boardhtml.js')(language),
+	  lang = require('./lang.json')[language],
+	  fs = require('fs');
+
 
 //let multipartM = multipart();
 
@@ -14,16 +19,22 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(express.static(__dirname + '/resources'));
 
-//setInterval((e)=>{console.log(server, server.boards.b.threads, server.boards.b.threads[0].posts);}, 5000)
+setInterval((e)=>{
+	fs.writeFile(__dirname + '/server.json', JSON.stringify(server), function(err) {
+		if(err) {
+			return console.log(err);
+		}
+	}); 
+}, 10000);
 
 class Server{
-	constructor(port){
+	constructor(){
 		this.boardList = [
 			{name: 'Random', short: 'b'},
 			{name: 'Dev', short: 'd'}
 		];
 		this.boards = {};
-		this.port = port || 3000;
+		this.port = port || 80;
 	}
 	
 	boot(){
@@ -34,42 +45,46 @@ class Server{
 			if(!board) res.send({code: -1, note: lang.boardNotFound});
 			else if(!req.body.text && req.files.length < 1) res.send({code: -3, note: lang.emptyMessageWithoutFiles});
 			else {
+				let timeNow = getUnixTime();
 				let sendObj = {
 					id: ++this.boards[board].postCount
 				};
 				if(thread == 0){
 					let opHash = ((Math.random() + 1)*5).toString(36).substring(2, 30);
-					this.boards[board].threads[sendObj.id] = new Thread(
+						thread = sendObj.id;
+					
+					this.boards[board].threads[thread] = new Thread(
 						opHash,
 						new Post({
 							text: req.body.text,
 							name:  req.body.name || lang.default.name,
-							subject: req.body.subject || req.body.text.split(' ').slice(0, 5),
-							timestamp: getUnixTime(),
+							subject: req.body.subject || req.body.text.split(' ').slice(0, 5).join(' '),
+							timestamp: timeNow,
 							files: req.files, //TODO: make this actually work!
 							sage: req.body.sage,
 							op: req.body.opMark || false,
 							id: sendObj.id,
 						})
 					);
-					res.cookie(`op_of_${sendObj.id}`, opHash, {maxAge: 1000 * 60 * 60 * 24 * 5}) //5 days
+					res.cookie(`op_of_${thread}`, opHash, {maxAge: 1000 * 60 * 60 * 24 * 5}) //5 days
 					sendObj.opHash = opHash;
 					sendObj.newThread = true;
 					res.status(302);
-					res.append('Location', `/${board}/${sendObj.id}.html`);
+					res.append('Location', `/${board}/${thread}.html`);
 				} else {
 					this.boards[board].threads[thread].posts.push(new Post({
 						text: req.body.text,
 						name:  req.body.name || 'Anonymous',
-						timestamp: getUnixTime(),
+						timestamp: timeNow,
 						files: req.files, //TODO: make this actually work!
 						sage: req.body.sage,
 						op: (this.boards[board].threads[thread].opHash == req.cookies[`op_of_${sendObj.id}`] && req.body.opMark) || false,
 						id: sendObj.id,
 					}));
 					res.status(302);
-					res.append('Location', `/${board}/${sendObj.id}.html`);
+					res.append('Location', `/${board}/${thread}.html`);
 				}
+				if(!req.body.sage) this.boards[board].threads[thread].bumpTime = timeNow;
 				sendObj.code = 0;
 				sendObj.note = lang.success;
 				res.send(sendObj);
@@ -156,6 +171,7 @@ class Post{
 		this.timestamp = post.timestamp;
 		this.id = post.id;
 		this.op = post.op;
+		this.sage = post.sage
 	}
 }
 

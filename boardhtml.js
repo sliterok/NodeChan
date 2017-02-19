@@ -1,6 +1,4 @@
-module.exports = {};
-let lang = require('./lang.json').EN,
-	escape = require("html-escape");
+let escape = require("html-escape");
 
 function genField(name, label, el, type, value, display){
 		return `
@@ -10,10 +8,12 @@ function genField(name, label, el, type, value, display){
 </div>`
 }
 
-module.exports = {
+module.exports = function(language){
+	let lang = require('./lang.json')[language]
+	return {
 	genForm(board, thread){
 		return `
-<form class="mui-form post-form" action="/post.js" method="POST">
+<form class="mui-panel mui-form post-form" action="/post.js" method="POST">
 	<legend>${thread ? lang.form.post : lang.form.thread}</legend>
 	${genField('name', lang.form.name, 'input', 'text')}
 	${thread ? '' : genField('subject', lang.form.subject, 'input', 'text')}
@@ -22,17 +22,15 @@ module.exports = {
 	${genField('thread', '', 'input', 'text', thread, 'none')}
 	<div class="mui-checkbox">
 		<label>
-			<input name="sage" type="checkbox">
-			${lang.form.sage}
+			<input name="sage" type="checkbox">${lang.form.sage}
 		</label>
 	</div>
 	<div class="mui-checkbox">
 		<label>
-			<input name="opMark" type="checkbox">
-			${lang.form.op}
+			<input name="opMark" type="checkbox">${lang.form.op}
 		</label>
 	</div>
-	<button type="submit" class="mui-btn mui-btn--raised">Submit</button>
+	<button type="submit" class="mui-btn mui-btn--raised">${lang.form.submit}</button>
 </form>`;
 	},
 	
@@ -51,15 +49,15 @@ module.exports = {
 <body>`
 	},
 	genTopHTML(board, thread){
-		return `${module.exports.genHead()}<div class="mui-container">${module.exports.genForm(board, thread)}`
+		return `${module.exports(language).genHead()}<div class="mui-container">${module.exports(language).genForm(board, thread)}`
 	},
 	
 	genBottomHTML(board, thread){
-		return `${module.exports.genForm(board, thread)}</div></body>`;
+		return `${module.exports(language).genForm(board, thread)}</div></body>`;
 	},
 	
 	insertHTML(html, board, thread){
-		return `${module.exports.genTopHTML(board, thread)}${html}${module.exports.genBottomHTML(board, thread)}`;
+		return `${module.exports(language).genTopHTML(board, thread)}${html}${module.exports(language).genBottomHTML(board, thread)}`;
 	},
 	
 	genPostHTML(post){
@@ -70,13 +68,14 @@ module.exports = {
 		<div class="mui--z1 post-header">
 			<span class="post-author">${post.name}</span>
 			<span class="post-time" date-timestamp="${post.timestamp}">${time.toLocaleDateString()} ${time.toLocaleTimeString()}</span>
-			${post.subject ? `<span class="post-subject">${post.subject}</span>` : ''}
+			${post.subject ? `<span class="post-subject">${escape(post.subject)}</span>` : ''}
 			<span class="post-id">#${post.id}</span>
 			${post.op ? `<span class="post-op">✔️️</span>` : ''}
+			${post.sage ? `<span class="post-sage">sage</span>` : ''}
 		</div>
 		${post.images ? `<div class="post-images"></div><!-- TODO: images! -->` : ''}
 		<div class="post-body">${escape(post.text)}</div>
 	</div>
 </div>`
 	}
-}
+}}

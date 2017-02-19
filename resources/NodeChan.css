@@ -1,3 +1,6 @@
+body{
+	background: #ccc;
+}
 .post{
 	display: inline-block;
 }
@@ -5,10 +8,19 @@
 	padding: 6px;
     margin: -15px -15px 1em;
 }
+.post-subject{
+	font-weight: bold;
+}
+.post-sage{
+	color: red;
+}
+.post-id{
+	color: green
+}
 .post-form{
 	width: 50%;
 	display: block;
-	margin: 0 auto;
+	margin: 1em auto;
 }
 .post-body{
 	display: inline-block;
